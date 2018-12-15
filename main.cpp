@@ -33,7 +33,7 @@ int main(int argc, char** argv) {
   x2 = 0;
   y2 = 0;
 
-  delete_noize(dst, 0);
+  delete_noise(dst, 0);
 
   for (unsigned i = 0; i < dst.rows; i++) {
     for (unsigned j = 0; j < dst.cols; j++)
