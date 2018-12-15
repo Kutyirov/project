@@ -6,40 +6,6 @@ unsigned up_canny = 300;
 unsigned img_coef = 120;
 unsigned speed_coef = 300;
 
-int main( int argc, char** argv ) {
-    
-    Mat img;
-    Mat dst;
-    Mat src;
-    Mat detected_edges;
-    std::string path = "";
-    std::cout << "Enter the path to image:";
-    std::cin >> path;
-    std::cout << "\n";
-    img = cv::imread(path);
-    src = img;
-    if(! img.data ) {
-      std::cout <<  "Could not open or find the image" << std::endl ;
-      return -1;
-    }
-
-    
-
-    Canny(img,detected_edges, low_canny, up_canny);    
-    dst = Scalar::all(0);
-
-    src.copyTo( dst, detected_edges);
-    
-    unsigned x1,y1,x2,y2;
-        x1 = 0;
-        y1 = 0;
-#include "header.hpp"
-using namespace cv;
-unsigned low_canny = 100;
-unsigned up_canny = 300;
-unsigned img_coef = 120;
-unsigned speed_coef = 300;
-
 int main(int argc, char** argv) {
   Mat img;
   Mat dst;
