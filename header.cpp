@@ -1,5 +1,5 @@
 #include "header.hpp"
-void delete_noize(Mat &img, unsigned coef) {
+void delete_noise(Mat &img, unsigned coef) {
   // std::cout << "works\n";
   for (int i = 0; i < img.rows; i++) {
     for (int j = 0; j < img.cols; j++) {
@@ -38,7 +38,7 @@ void find_elements(int **&work, unsigned x1, unsigned y1, unsigned x2,
       if (cap.data) {
         std::cout << capacitor << std::endl;
       }
-      delete_noize(cap, 50);
+      delete_noise(cap, 50);
       y3 = y2 + 60 - y1 - cap.rows;
       x3 = x2 + 60 - x1 - cap.cols;
       for (unsigned i = 0; i < y3; i++) {
