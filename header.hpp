@@ -4,7 +4,7 @@
 #include <string>
 using namespace cv;
 
-void delete_noize(Mat&, unsigned);
+void delete_noise(Mat&, unsigned);
 
 void find_elements(int**&, unsigned, unsigned, unsigned, unsigned, unsigned,
                    std::pair<unsigned, bool>**&);
