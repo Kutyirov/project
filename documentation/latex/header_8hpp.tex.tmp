@@ -1,0 +1,39 @@
+\hypertarget{header_8hpp}{}\section{files/header.hpp File Reference}
+\label{header_8hpp}\index{files/header.\+hpp@{files/header.\+hpp}}
+
+
+Заголовочный файл с описанием классов  
+
+
+This graph shows which files directly or indirectly include this file\+:
+% FIG 0
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{header_8hpp_a093a60e169f0689082603a2d82fc2d63}{delete\+\_\+noize} (Mat \&img, unsigned coef)
+\begin{DoxyCompactList}\small\item\em Копирует содержимое из исходной области памяти в целевую область память \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Заголовочный файл с описанием классов 
+
+Данный файл содержит в себе определения основных классов, используемых в демонстрационной программе 
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{header_8hpp_a093a60e169f0689082603a2d82fc2d63}\label{header_8hpp_a093a60e169f0689082603a2d82fc2d63}} 
+\index{header.\+hpp@{header.\+hpp}!delete\+\_\+noize@{delete\+\_\+noize}}
+\index{delete\+\_\+noize@{delete\+\_\+noize}!header.\+hpp@{header.\+hpp}}
+\subsubsection{\texorpdfstring{delete\+\_\+noize()}{delete\_noize()}}
+{\footnotesize\ttfamily void delete\+\_\+noize (\begin{DoxyParamCaption}\item[{Mat \&}]{img,  }\item[{unsigned}]{coef }\end{DoxyParamCaption})}
+
+
+
+Копирует содержимое из исходной области памяти в целевую область память 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em img} & Целевая область памяти \\
+\hline
+\mbox{\tt in}  & {\em coef} & Исходная область памяти \\
+\hline
+\end{DoxyParams}

@@ -1,0 +1,258 @@
+\hypertarget{main_8cpp}{}\section{files/main.cpp File Reference}
+\label{main_8cpp}\index{files/main.\+cpp@{files/main.\+cpp}}
+
+
+файл с основной программой  
+
+
+{\ttfamily \#include \char`\"{}header.\+hpp\char`\"{}}\newline
+Include dependency graph for main.\+cpp\+:
+% FIG 0
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \hyperlink{main_8cpp_a3c04138a5bfe5d72780bb7e82a18e627}{main} (int argc, char $\ast$$\ast$argv)
+\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{main_8cpp_ab1a16c28e07341cf5ffd69e54b8630b5}\label{main_8cpp_ab1a16c28e07341cf5ffd69e54b8630b5}} 
+unsigned \hyperlink{main_8cpp_ab1a16c28e07341cf5ffd69e54b8630b5}{low\+\_\+canny} = 100
+\begin{DoxyCompactList}\small\item\em коэффициент нижнего значения фнкции Canny. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{main_8cpp_a9c38b918d326e93168f4a2a2d9eba9fa}\label{main_8cpp_a9c38b918d326e93168f4a2a2d9eba9fa}} 
+unsigned \hyperlink{main_8cpp_a9c38b918d326e93168f4a2a2d9eba9fa}{up\+\_\+canny} = 300
+\begin{DoxyCompactList}\small\item\em коэффициент верхнего значения фнкции Canny. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{main_8cpp_acc03dfc5d52381025aff49d162299c8e}\label{main_8cpp_acc03dfc5d52381025aff49d162299c8e}} 
+unsigned \hyperlink{main_8cpp_acc03dfc5d52381025aff49d162299c8e}{img\+\_\+coef} = 120
+\begin{DoxyCompactList}\small\item\em коэффициент пограничного значения яркости пикселя при сложении изображений \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{main_8cpp_a56babcc9899cc2fa5bd2ccecb23b27dd}\label{main_8cpp_a56babcc9899cc2fa5bd2ccecb23b27dd}} 
+unsigned \hyperlink{main_8cpp_a56babcc9899cc2fa5bd2ccecb23b27dd}{speed\+\_\+coef} = 300
+\begin{DoxyCompactList}\small\item\em коэффициент пограничного значения матрицы speed. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+файл с основной программой 
+
+Данный файл содержит в себе определения основных классов, используемых в демонстрационной программе 
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{main_8cpp_a3c04138a5bfe5d72780bb7e82a18e627}\label{main_8cpp_a3c04138a5bfe5d72780bb7e82a18e627}} 
+\index{main.\+cpp@{main.\+cpp}!main@{main}}
+\index{main@{main}!main.\+cpp@{main.\+cpp}}
+\subsubsection{\texorpdfstring{main()}{main()}}
+{\footnotesize\ttfamily int main (\begin{DoxyParamCaption}\item[{int}]{argc,  }\item[{char $\ast$$\ast$}]{argv }\end{DoxyParamCaption})}
+
+ищем координаты интересующей области
+
+
+\begin{DoxyCode}
+\textcolor{keywordflow}{for} (\textcolor{keywordtype}{unsigned} i = 0; i < dst.rows; i++)\{
+    \textcolor{keywordflow}{for} (\textcolor{keywordtype}{unsigned} j = 0; j < dst.cols; j++)
+        \textcolor{keywordflow}{if} (\textcolor{keywordtype}{int}(dst.at<cv::Vec3b>(i,j)[0]) == 255)\{
+            y1 = i;
+            \textcolor{keywordflow}{break};
+        \}
+    \textcolor{keywordflow}{if} (y1) \textcolor{keywordflow}{break};
+\}
+\textcolor{keywordflow}{for} (\textcolor{keywordtype}{unsigned} j = 0; j < dst.cols; j++)
+    \textcolor{keywordflow}{for} (\textcolor{keywordtype}{unsigned} i = 0; i < dst.rows; i++)\{ 
+        \textcolor{keywordflow}{if} (\textcolor{keywordtype}{int}(dst.at<cv::Vec3b>(i,j)[0]) == 255)\{
+            x1 = j;
+            \textcolor{keywordflow}{break};
+        \}
+    \textcolor{keywordflow}{if} (x1) \textcolor{keywordflow}{break};
+\}
+\textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i = dst.rows - 1; i > 0; i--)\{
+    \textcolor{keywordflow}{for} (\textcolor{keywordtype}{unsigned} j = dst.cols - 1; j > 0; j--)
+        \textcolor{keywordflow}{if} (\textcolor{keywordtype}{int}(dst.at<cv::Vec3b>(i,j)[0]) == 255)\{
+            y2 = i;
+            \textcolor{keywordflow}{break};
+        \}
+    \textcolor{keywordflow}{if} (y2) \textcolor{keywordflow}{break};
+\}
+\textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} j = dst.cols - 1; j > 0; j--)
+    \textcolor{keywordflow}{for} (\textcolor{keywordtype}{unsigned} i = dst.rows - 1; i > 0; i--)\{
+        \textcolor{keywordflow}{if} (\textcolor{keywordtype}{int}(dst.at<cv::Vec3b>(i,j)[0]) == 255)\{
+            x2 = j;
+            \textcolor{keywordflow}{break};
+        \}
+    \textcolor{keywordflow}{if} (x2) \textcolor{keywordflow}{break};
+\}
+\end{DoxyCode}
+
+
+составляем рабочую область изображения 
+\begin{DoxyCode}
+\textcolor{keywordtype}{int}** work;
+work = \textcolor{keyword}{new} \textcolor{keywordtype}{int}*[y2-y1+61];
+\textcolor{keywordflow}{for} (\textcolor{keywordtype}{unsigned} i = 0; i < y2-y1+61;i++)
+    work[i] = \textcolor{keyword}{new} \textcolor{keywordtype}{int}[x2-x1+61];
+\textcolor{keywordflow}{for}(\textcolor{keywordtype}{unsigned} i = 0; i < y2-y1+61;i++)
+    \textcolor{keywordflow}{for} (\textcolor{keywordtype}{unsigned} j = 0; j < x2 - x1 + 61; j++)
+        work[i][j] = \textcolor{keywordtype}{int}(dst.at<cv::Vec3b>(y1 + i - 30,x1 + j - 30)[0]);
+
+std::pair<unsigned,bool>** speed;
+\end{DoxyCode}
+
+
+составляем матрицу предварительной обработки изображения 
+\begin{DoxyCode}
+speed = \textcolor{keyword}{new} std::pair<unsigned,bool>*[y2-y1+61];
+\textcolor{keywordflow}{for} (\textcolor{keywordtype}{unsigned} i = 0; i < y2-y1+61;i++)
+    speed[i] = \textcolor{keyword}{new} std::pair<unsigned,bool>[x2-x1+61];
+\textcolor{keywordflow}{for}(\textcolor{keywordtype}{unsigned} i = 0; i < y2-y1+61;i++)\{
+    \textcolor{keywordflow}{for} (\textcolor{keywordtype}{unsigned} j = 0; j < x2 - x1 + 61; j++)\{
+        speed[i][j].second = \textcolor{keyword}{false};
+        speed[i][j].first = 0;
+    \}
+\}
+
+\textcolor{keywordflow}{for}(\textcolor{keywordtype}{unsigned} i = 0; i < y2-y1+61 - 100;i++)\{
+    \textcolor{keywordflow}{for} (\textcolor{keywordtype}{unsigned} j = 0; j < x2 - x1 + 61 - 100; j++)\{
+        \textcolor{keywordflow}{for} (\textcolor{keywordtype}{unsigned} i1 = 0; i1 < 100; i1++)
+            \textcolor{keywordflow}{for} (\textcolor{keywordtype}{unsigned} j1 = 0; j1 < 100; j1++)
+                \textcolor{keywordflow}{if} (work[i + i1][j + j1] == 255)
+                    speed[i][j].first++;
+        \textcolor{keywordflow}{if} (speed[i][j].first > \hyperlink{main_8cpp_a56babcc9899cc2fa5bd2ccecb23b27dd}{speed\_coef})
+            speed[i][j].second = \textcolor{keyword}{true};
+    \}
+\}
+\end{DoxyCode}
+
+
+в этом блоке ищем элементы электрической цепи 
+\begin{DoxyCode}
+\textcolor{keywordtype}{char} answer1 = \textcolor{charliteral}{'n'};
+\textcolor{keywordflow}{while} (answer1 != \textcolor{charliteral}{'y'}) \{
+    \hyperlink{header_8cpp_aaca8906c93d4f7be7a144648a2b81254}{find\_elements}(work,x1,y1,x2,y2,\hyperlink{main_8cpp_a56babcc9899cc2fa5bd2ccecb23b27dd}{speed\_coef},speed); \textcolor{comment}{//нашли элементы}
+
+    \textcolor{keywordflow}{for} (\textcolor{keywordtype}{unsigned} i = 0; i < y2- y1 + 61; i++)\{
+        \textcolor{keywordflow}{for}(\textcolor{keywordtype}{unsigned} j = 0; j < x2 - x1 + 61; j++)\{
+            dst.at<cv::Vec3b>(y1 + i - 30,x1 + j - 30)[0] = work[i][j];
+            dst.at<cv::Vec3b>(y1 + i - 30,x1 + j - 30)[1] = work[i][j];
+            dst.at<cv::Vec3b>(y1 + i - 30,x1 + j - 30)[2] = work[i][j];
+        \}
+    \}
+    imwrite(\textcolor{stringliteral}{"end1.jpg"}, dst);
+    std::cout << \textcolor{stringliteral}{"is ot ok? y/n\(\backslash\)n"};
+    std::cin >> answer1;
+    \textcolor{keywordflow}{if} (answer1 == \textcolor{charliteral}{'n'}) \{
+        std::cout << \textcolor{stringliteral}{"old speed coefficient = "} << \hyperlink{main_8cpp_a56babcc9899cc2fa5bd2ccecb23b27dd}{speed\_coef} << \textcolor{stringliteral}{"\(\backslash\)nnew speed coefficient="};
+        std::cin >> \hyperlink{main_8cpp_a56babcc9899cc2fa5bd2ccecb23b27dd}{speed\_coef};
+        std::cout << \textcolor{stringliteral}{"\(\backslash\)n"};
+    \}
+    \textcolor{keywordflow}{for}(\textcolor{keywordtype}{unsigned} i = 0; i < y2-y1+61 - 100;i++)\{
+        \textcolor{keywordflow}{for} (\textcolor{keywordtype}{unsigned} j = 0; j < x2 - x1 + 61 - 100; j++)\{
+            \textcolor{keywordflow}{if} (speed[i][j].first > \hyperlink{main_8cpp_a56babcc9899cc2fa5bd2ccecb23b27dd}{speed\_coef})
+                speed[i][j].second = \textcolor{keyword}{true};
+            \textcolor{keywordflow}{else} 
+                speed[i][j].second = \textcolor{keyword}{false};
+        \}
+    \}
+\}
+\end{DoxyCode}
+
+
+в этом блоке складываем изображения 
+\begin{DoxyCode}
+\textcolor{keywordflow}{while} (answer2 != \textcolor{charliteral}{'y'}) \{
+    Mat second;
+    second = cv::imread(path);
+    \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i = 0; i < second.rows; i++)
+        \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} j = 0; j < second.cols; j++) \{
+            \textcolor{keywordflow}{if} (\textcolor{keywordtype}{int}(second.at<cv::Vec3b>(i, j)[0]) +
+                \textcolor{keywordtype}{int}(second.at<cv::Vec3b>(i, j)[1]) +
+                \textcolor{keywordtype}{int}(second.at<cv::Vec3b>(i, j)[2]) <
+                \hyperlink{main_8cpp_acc03dfc5d52381025aff49d162299c8e}{img\_coef}) \{
+                    second.at<cv::Vec3b>(i, j)[0] = 255;
+                    second.at<cv::Vec3b>(i, j)[1] = 255;
+                    second.at<cv::Vec3b>(i, j)[2] = 255;
+
+            \} \textcolor{keywordflow}{else} \{
+                second.at<cv::Vec3b>(i, j)[0] = 0;
+                second.at<cv::Vec3b>(i, j)[1] = 0;
+                second.at<cv::Vec3b>(i, j)[2] = 0;
+            \}
+        \}
+
+    \textcolor{keywordflow}{for} (\textcolor{keywordtype}{unsigned} i = 0; i < y2 - y1 + 61; i++)
+        \textcolor{keywordflow}{for} (\textcolor{keywordtype}{unsigned} j = 0; j < x2 - x1 + 61; j++) \{
+            \textcolor{keywordflow}{if} (((work[i][j] == 0) || (work[i][j] > 18)) &&
+                (int(second.at<cv::Vec3b>(y1 + i - 30, x1 + j - 30)[0]) == 255))
+                    work[i][j] = 255;
+
+            \textcolor{keywordflow}{if} ((\textcolor{keywordtype}{int}(second.at<cv::Vec3b>(y1 + i - 30, x1 + j - 30)[0]) == 0) &&
+                (work[i][j] > 18))
+                    work[i][j] = 0;
+        \}
+    \textcolor{keywordflow}{for} (\textcolor{keywordtype}{unsigned} i = 0; i < y2 - y1 + 61; i++)
+        \textcolor{keywordflow}{for} (\textcolor{keywordtype}{unsigned} j = 0; j < x2 - x1 + 61; j++) \{
+            dst.at<cv::Vec3b>(y1 + i - 30, x1 + j - 30)[0] = work[i][j];
+            dst.at<cv::Vec3b>(y1 + i - 30, x1 + j - 30)[1] = work[i][j];
+            dst.at<cv::Vec3b>(y1 + i - 30, x1 + j - 30)[2] = work[i][j];
+        \}
+
+    imwrite(\textcolor{stringliteral}{"end2.jpg"}, dst);
+    std::cout << \textcolor{stringliteral}{"is ot ok? y/n\(\backslash\)n"};
+    std::cin >> answer2;
+    \textcolor{keywordflow}{if} (answer2 == \textcolor{charliteral}{'n'}) \{
+        std::cout << \textcolor{stringliteral}{"old image coefficient = "} << \hyperlink{main_8cpp_acc03dfc5d52381025aff49d162299c8e}{img\_coef} << \textcolor{stringliteral}{"\(\backslash\)nnew image coefficient="};
+        std::cin >> \hyperlink{main_8cpp_acc03dfc5d52381025aff49d162299c8e}{img\_coef};
+        std::cout << \textcolor{stringliteral}{"\(\backslash\)n"};
+    \}
+\}
+\end{DoxyCode}
+
+
+обрабатываем провода
+
+
+\begin{DoxyCode}
+\hyperlink{header_8cpp_af80f8888072da393169e8d533b00c030}{find\_wire}(work,x1,y1,x2,y2); 
+\end{DoxyCode}
+
+
+и подставляем идеальные изображения вместо обнаруженных элементов
+
+
+\begin{DoxyCode}
+\hyperlink{header_8cpp_a019c326f9a54da478f0e30d9aac86ab2}{push\_elements}(work,x1,y1,x2,y2);
+\end{DoxyCode}
+
+
+остается только записать рабочую область обратно в изображение 
+\begin{DoxyCode}
+\textcolor{keywordflow}{for} (\textcolor{keywordtype}{unsigned} i = 0; i < y2- y1 + 61; i++)
+    \textcolor{keywordflow}{for}(\textcolor{keywordtype}{unsigned} j = 0; j < x2 - x1 + 61; j++)\{
+        dst.at<cv::Vec3b>(y1 + i - 30,x1 + j - 30)[0] = work[i][j];
+        \textcolor{keywordflow}{if} ((work[i][j] == 0) || (work[i][j] == 254))\{
+            dst.at<cv::Vec3b>(y1 + i - 30,x1 + j - 30)[1] = work[i][j];
+            dst.at<cv::Vec3b>(y1 + i - 30,x1 + j - 30)[2] = work[i][j];
+        \}
+    \}
+\end{DoxyCode}
+
+
+и отразить цвета
+
+
+\begin{DoxyCode}
+\textcolor{keywordflow}{for}( \textcolor{keywordtype}{int} i = 0; i < dst.rows; i++ )\{
+    \textcolor{keywordflow}{for}( \textcolor{keywordtype}{int} j = 0; j < dst.cols; j++ )\{
+        \textcolor{keywordflow}{if} ((\textcolor{keywordtype}{int}(dst.at<cv::Vec3b>(i,j)[0]) == 0) && (\textcolor{keywordtype}{int}(dst.at<cv::Vec3b>(i,j)[1]) == 0) && (\textcolor{keywordtype}{int}(dst.at<
+      cv::Vec3b>(i,j)[2]) == 0))
+        \{    
+            dst.at<cv::Vec3b>(i,j)[0] = 255;
+            dst.at<cv::Vec3b>(i,j)[1] = 255;
+            dst.at<cv::Vec3b>(i,j)[2] = 255;
+                                   
+        \}
+        \textcolor{keywordflow}{else}
+        \{
+            dst.at<cv::Vec3b>(i,j)[0] = 0;
+            dst.at<cv::Vec3b>(i,j)[1] = 0;
+            dst.at<cv::Vec3b>(i,j)[2] = 0;
+        \}
+    \}
+\}
+\end{DoxyCode}

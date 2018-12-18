@@ -1,0 +1,545 @@
+\hypertarget{header_8cpp}{}\section{files/header.cpp File Reference}
+\label{header_8cpp}\index{files/header.\+cpp@{files/header.\+cpp}}
+
+
+файл с определениями функций  
+
+
+{\ttfamily \#include \char`\"{}header.\+hpp\char`\"{}}\newline
+Include dependency graph for header.\+cpp\+:
+% FIG 0
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{header_8cpp_a093a60e169f0689082603a2d82fc2d63}{delete\+\_\+noize} (Mat \&img, unsigned coef)
+\item 
+void \hyperlink{header_8cpp_aaca8906c93d4f7be7a144648a2b81254}{find\+\_\+elements} (int $\ast$$\ast$\&work, unsigned x1, unsigned y1, unsigned x2, unsigned y2, unsigned \hyperlink{main_8cpp_a56babcc9899cc2fa5bd2ccecb23b27dd}{speed\+\_\+coef}, std\+::pair$<$ unsigned, bool $>$ $\ast$$\ast$\&speed)
+\item 
+void \hyperlink{header_8cpp_af80f8888072da393169e8d533b00c030}{find\+\_\+wire} (int $\ast$$\ast$\&work, unsigned x1, unsigned y1, unsigned x2, unsigned y2)
+\item 
+void \hyperlink{header_8cpp_a019c326f9a54da478f0e30d9aac86ab2}{push\+\_\+elements} (int $\ast$$\ast$\&work, unsigned x1, unsigned y1, unsigned x2, unsigned y2)
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+файл с определениями функций 
+
+
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{header_8cpp_a093a60e169f0689082603a2d82fc2d63}\label{header_8cpp_a093a60e169f0689082603a2d82fc2d63}} 
+\index{header.\+cpp@{header.\+cpp}!delete\+\_\+noize@{delete\+\_\+noize}}
+\index{delete\+\_\+noize@{delete\+\_\+noize}!header.\+cpp@{header.\+cpp}}
+\subsubsection{\texorpdfstring{delete\+\_\+noize()}{delete\_noize()}}
+{\footnotesize\ttfamily void delete\+\_\+noize (\begin{DoxyParamCaption}\item[{Mat \&}]{img,  }\item[{unsigned}]{coef }\end{DoxyParamCaption})}
+
+Убирает шумы на изображении, приводя к черно-\/белому виду 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em img} & изображение, подвергаемое обработке \\
+\hline
+\mbox{\tt in}  & {\em coef} & пограничное значение яркости пикселя \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyCode}
+\textcolor{keywordflow}{for}( \textcolor{keywordtype}{int} i = 0; i < img.rows; i++ )\{
+    \textcolor{keywordflow}{for}( \textcolor{keywordtype}{int} j = 0; j < img.cols; j++ )\{
+        \textcolor{keywordflow}{if} ((\textcolor{keywordtype}{int}(img.at<cv::Vec3b>(i,j)[0]) > coef) || (\textcolor{keywordtype}{int}(img.at<cv::Vec3b>(i,j)[1]) > coef) || (\textcolor{keywordtype}{int}(img.
+      at<cv::Vec3b>(i,j)[2]) > coef))
+        \{    
+            img.at<cv::Vec3b>(i,j)[0] = 255;
+            img.at<cv::Vec3b>(i,j)[1] = 255;
+            img.at<cv::Vec3b>(i,j)[2] = 255;
+                                   
+        \}
+        \textcolor{keywordflow}{else}
+        \{
+            img.at<cv::Vec3b>(i,j)[0] = 0;
+            img.at<cv::Vec3b>(i,j)[1] = 0;
+            img.at<cv::Vec3b>(i,j)[2] = 0;
+        \}
+    \}
+\}
+\end{DoxyCode}
+\mbox{\Hypertarget{header_8cpp_aaca8906c93d4f7be7a144648a2b81254}\label{header_8cpp_aaca8906c93d4f7be7a144648a2b81254}} 
+\index{header.\+cpp@{header.\+cpp}!find\+\_\+elements@{find\+\_\+elements}}
+\index{find\+\_\+elements@{find\+\_\+elements}!header.\+cpp@{header.\+cpp}}
+\subsubsection{\texorpdfstring{find\+\_\+elements()}{find\_elements()}}
+{\footnotesize\ttfamily void find\+\_\+elements (\begin{DoxyParamCaption}\item[{int $\ast$$\ast$\&}]{work,  }\item[{unsigned}]{x1,  }\item[{unsigned}]{y1,  }\item[{unsigned}]{x2,  }\item[{unsigned}]{y2,  }\item[{unsigned}]{speed\+\_\+coef,  }\item[{std\+::pair$<$ unsigned, bool $>$ $\ast$$\ast$\&}]{speed }\end{DoxyParamCaption})}
+
+Находит элементы электрической цепи на фотографии 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in,out}  & {\em work} & рабочая область изображения \\
+\hline
+\mbox{\tt in}  & {\em x1} & одна из координат интересующей области \\
+\hline
+\mbox{\tt in}  & {\em y1} & одна из координат интересующей области \\
+\hline
+\mbox{\tt in}  & {\em x2} & одна из координат интересующей области \\
+\hline
+\mbox{\tt in}  & {\em y2} & одна из координат интересующей области \\
+\hline
+\mbox{\tt in}  & {\em speed\+\_\+coef} & коэффициент пограничного значения матрицы speed \\
+\hline
+\mbox{\tt in}  & {\em speed} & матрица предварительной обработки изображения \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyCode}
+std::string capa = \textcolor{stringliteral}{""};
+std::string tor = \textcolor{stringliteral}{".jpg"};
+std::string ci = \textcolor{stringliteral}{""};
+std::string capacitor = \textcolor{stringliteral}{""};
+Mat cap;
+\textcolor{comment}{//здесь цикл по папкам}
+\textcolor{keywordtype}{unsigned} y3,x3;
+\textcolor{keywordflow}{for} (\textcolor{keywordtype}{unsigned} t = 1; t < 10; t++)\{ \textcolor{comment}{//папки}
+    \textcolor{keywordflow}{for} (\textcolor{keywordtype}{unsigned} k = 1; k < 10; k++)\{ \textcolor{comment}{//образы}
+        capa = std::to\_string(t) + \textcolor{stringliteral}{"/"};
+        ci = std::to\_string(k);
+        capacitor = capa + ci + tor;
+        cap = cv::imread(capacitor);
+        \textcolor{keywordflow}{if}(cap.data ) \{
+            std::cout << capacitor << std::endl;
+        \}
+        \hyperlink{header_8cpp_a093a60e169f0689082603a2d82fc2d63}{delete\_noize}(cap,50);
+        y3 = y2 + 60 - y1 - cap.rows;
+        x3 = x2 + 60 - x1 - cap.cols;
+        \textcolor{keywordflow}{for}(\textcolor{keywordtype}{unsigned} i = 0; i < y3; i++)\{
+            \textcolor{keywordflow}{for}(\textcolor{keywordtype}{unsigned} j = 0; j < x3; j++)\{
+                \textcolor{keywordtype}{unsigned} quanity = 0;
+                \textcolor{keywordflow}{if} (speed[i][j].second)
+                \textcolor{keywordflow}{for} (\textcolor{keywordtype}{unsigned} i1 = 0; i1 < cap.rows; i1++)
+                    \textcolor{keywordflow}{for} (\textcolor{keywordtype}{unsigned} j1 = 0; j1 < cap.cols; j1++)
+                        \textcolor{keywordflow}{if} (work[i+i1][j+j1] == \textcolor{keywordtype}{int}(cap.at<cv::Vec3b>(i1,j1)[0]))
+                            quanity++;
+                \textcolor{keywordflow}{if} (quanity > cap.rows*cap.cols-400)
+                \textcolor{keywordflow}{for} (\textcolor{keywordtype}{unsigned} i1 = i; i1 < cap.rows+i; i1++)
+                    \textcolor{keywordflow}{for} (\textcolor{keywordtype}{unsigned} j1 = j; j1 < cap.cols+j; j1++)
+                        work[i1][j1] = t;
+            \}
+        \}
+            
+    \}
+\}
+\end{DoxyCode}
+\mbox{\Hypertarget{header_8cpp_af80f8888072da393169e8d533b00c030}\label{header_8cpp_af80f8888072da393169e8d533b00c030}} 
+\index{header.\+cpp@{header.\+cpp}!find\+\_\+wire@{find\+\_\+wire}}
+\index{find\+\_\+wire@{find\+\_\+wire}!header.\+cpp@{header.\+cpp}}
+\subsubsection{\texorpdfstring{find\+\_\+wire()}{find\_wire()}}
+{\footnotesize\ttfamily void find\+\_\+wire (\begin{DoxyParamCaption}\item[{int $\ast$$\ast$\&}]{work,  }\item[{unsigned}]{x1,  }\item[{unsigned}]{y1,  }\item[{unsigned}]{x2,  }\item[{unsigned}]{y2 }\end{DoxyParamCaption})}
+
+Убирает старые провода и рисует на их месте новые, прямые 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in,out}  & {\em work} & рабочая область изображения \\
+\hline
+\mbox{\tt in}  & {\em x1} & одна из координат интересующей области \\
+\hline
+\mbox{\tt in}  & {\em y1} & одна из координат интересующей области \\
+\hline
+\mbox{\tt in}  & {\em x2} & одна из координат интересующей области \\
+\hline
+\mbox{\tt in}  & {\em y2} & одна из координат интересующей области \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyCode}
+\textcolor{keywordflow}{for}(\textcolor{keywordtype}{unsigned} i = 0; i < y2-y1+61;i++)
+    \textcolor{keywordflow}{for} (\textcolor{keywordtype}{unsigned} j = 0; j < x2 - x1 + 61; j++)
+        
+        \textcolor{keywordflow}{if} (work[i][j] == 255)\{ \textcolor{comment}{//ищем крайние точки}
+        std::cout << \textcolor{stringliteral}{"i = "} << i << \textcolor{stringliteral}{" j = "} << j << std::endl;
+            
+            \textcolor{keywordtype}{unsigned} x1,y1,x2,y2;
+            x1 = 0;
+            y1 = 0;
+            x2 = 0;
+            y2 = 0;
+            \textcolor{keywordtype}{unsigned} direction1 = 0;
+            \textcolor{keywordtype}{unsigned} direction2 = 0;
+            \textcolor{keywordflow}{if} ((work[i-1][j] > 0) && (work[i-1][j] < 19))\{
+                x1 = j;
+                y1 = i - 1;
+                y2 = i + 1;
+                x2 = j;
+                \textcolor{keywordtype}{unsigned} p = 0;
+                \textcolor{keywordflow}{for} (\textcolor{keywordtype}{unsigned} j1 = j - 40; j1 < j + 41; j1++)\{
+                        \textcolor{keywordflow}{if} (work[i][j1] == 255)\{
+                            work[i][j1] = 0;
+                        \}   
+                    \}
+                direction2 = 3;
+            \}
+            \textcolor{keywordflow}{else} \{
+                direction1 = 4;
+                direction2 = 2;
+                \textcolor{keywordtype}{unsigned} p = 0;
+                x1 = j - 1;
+                y1 = i;
+                y2 = i;
+                x2 = j;
+            \}
+            std::cout << \textcolor{stringliteral}{"first\(\backslash\)n"}; 
+            \textcolor{keywordflow}{while} (!((work[y1][x1] > 0) && (work[y1][x1] < 19)))\{
+                \textcolor{keywordtype}{unsigned} number = 0;
+                \textcolor{keywordflow}{if} ((direction1 == 1) || (direction1 == 3))\{
+                    \textcolor{keywordflow}{for} (\textcolor{keywordtype}{unsigned} j1 = x1 - 40; j1 < x1 + 41; j1++)\{
+                        \textcolor{keywordflow}{if} (work[y1][j1] == 255)\{
+                            work[y1][j1] = 0;
+                            number++;
+                        \}   
+                    \}
+                \}
+                \textcolor{keywordflow}{if} ((direction1 == 2) || (direction1 == 4))\{
+                    \textcolor{keywordflow}{for} (\textcolor{keywordtype}{unsigned} i1 = y1 - 40; i1 < y1 + 41; i1++)\{
+                        \textcolor{keywordflow}{if} (work[i1][x1] == 255)\{
+                            work[i1][x1] = 0;
+                            number++;
+                        \}
+                    \}
+                \}
+                \textcolor{keywordflow}{if} (direction1 == 1)\{
+                    y1--;
+                \}
+                \textcolor{keywordflow}{if} (direction1 == 2)\{
+                    x1++;
+                \}
+                \textcolor{keywordflow}{if} (direction1 == 3)\{
+                    y1++;
+                \}
+                \textcolor{keywordflow}{if} (direction1 == 4)\{
+                    x1--;
+                \}
+                \textcolor{keywordflow}{if} (number < 1)\{
+                    \textcolor{keywordflow}{if} (direction1 == 1)\{
+                        y1+=13;
+                    \}
+                    \textcolor{keywordflow}{if} (direction1 == 2)\{
+                        x1-=13;
+                    \}
+                    \textcolor{keywordflow}{if} (direction1 == 3)\{
+                        y1-=13;
+                    \}
+                    \textcolor{keywordflow}{if} (direction1 == 4)\{
+                        x1+=13;
+                    \}
+                    \textcolor{keywordflow}{if} ((direction1 == 1) || (direction1 == 3))\{
+                        \textcolor{keywordflow}{if} (work[y1][x1 - 41] == 255)\{
+                            x1 -= 41;
+                            direction1 = 4;
+                        \}
+                        \textcolor{keywordflow}{else} \{
+                            x1 += 41;
+                            direction1 = 2;
+                        \}
+                    \}
+                    \textcolor{keywordflow}{if} ((direction1 == 2) || (direction1 == 4))\{
+                        \textcolor{keywordflow}{if} (work[y1 - 41][x1] == 255)\{
+                            y1 -= 41;
+                            direction1 = 1;
+                            \textcolor{keywordflow}{continue};
+                        \}
+                        \textcolor{keywordflow}{else} \{
+                            y1 += 41;
+                            direction1 = 3;
+                            \textcolor{keywordflow}{continue};
+                        \}
+                    \}
+                \}
+            \}         
+            std::cout << \textcolor{stringliteral}{"second\(\backslash\)n"};   
+            \textcolor{keywordflow}{while} (!((work[y2][x2] > 0) && (work[y2][x2] < 19)))\{
+                \textcolor{keywordtype}{unsigned} number = 0;
+                \textcolor{keywordflow}{if} ((direction2 == 1) || (direction2 == 3))\{
+                    \textcolor{keywordflow}{for} (\textcolor{keywordtype}{unsigned} j1 = x2 - 40; j1 < x2 + 41; j1++)\{
+                        \textcolor{keywordflow}{if} (work[y2][j1] == 255)\{
+                            work[y2][j1] = 0;
+                            number++;
+                        \}   
+                    \}
+                \}
+                \textcolor{keywordflow}{if} ((direction2 == 2) || (direction2 == 4))\{
+                    \textcolor{keywordflow}{for} (\textcolor{keywordtype}{unsigned} i1 = y2 - 40; i1 < y2 + 41; i1++)\{
+                        \textcolor{keywordflow}{if} (work[i1][x2] == 255)\{
+                            work[i1][x2] = 0;
+                            number++;
+                        \}
+                    \}
+                \}
+                \textcolor{keywordflow}{if} (direction2 == 1)\{
+                    y2--;
+                \}
+                \textcolor{keywordflow}{if} (direction2 == 2)\{
+                    x2++;
+                \}
+                \textcolor{keywordflow}{if} (direction2 == 3)\{
+                    y2++;
+                \}
+                \textcolor{keywordflow}{if} (direction2 == 4)\{
+                    x2--;
+                \}
+                \textcolor{keywordflow}{if} (number < 1)\{
+                    \textcolor{keywordflow}{if} (direction2 == 1)\{
+                        y2+=13;
+                    \}
+                    \textcolor{keywordflow}{if} (direction2 == 2)\{
+                        x2-=13;
+                    \}
+                    \textcolor{keywordflow}{if} (direction2 == 3)\{
+                        y2-=13;
+                    \}
+                    \textcolor{keywordflow}{if} (direction2 == 4)\{
+                        x2+=13;
+                    \}
+                    \textcolor{keywordflow}{if} ((direction2 == 1) || (direction2 == 3))\{
+                        \textcolor{keywordflow}{if} (work[y2][x2 - 41] == 255)\{
+                            x2 -= 41;
+                            direction2 = 4;
+                            \textcolor{keywordflow}{continue};
+                        \}
+                        \textcolor{keywordflow}{else} \{
+                            x2 += 41;
+                            direction2 = 2;
+                            \textcolor{keywordflow}{continue};
+                        \}
+                    \}
+                    \textcolor{keywordflow}{if} ((direction2 == 2) || (direction2 == 4))\{
+                        \textcolor{keywordflow}{if} (work[y2 - 41][x2] == 255)\{
+                            y2 -= 41;
+                            direction2 = 1;
+                        \}
+                        \textcolor{keywordflow}{else} \{
+                            y2 += 41;
+                            direction2 = 3;
+                        \}
+                    \}
+                \}
+            \}
+            \textcolor{keywordtype}{unsigned} l1 = 0;
+            \textcolor{keywordtype}{unsigned} m1 = 0;
+            
+            \textcolor{keywordflow}{if} ( work[y1][x1] % 2 == 1 ) \{
+                l1 = x1;
+                m1 = x1;
+                \textcolor{keywordflow}{while} (work[y1][l1] != 0)
+                    l1 = l1 - 1;
+                \textcolor{keywordflow}{while} (work[y1][m1] != 0)
+                    m1 = m1 + 1;
+                x1 = (l1 + m1) / 2;
+            \}
+            \textcolor{keywordflow}{else} \textcolor{keywordflow}{if} ( work[y1][x1] % 2 == 0 )\{
+                l1 = y1;
+                m1 = y1;
+                
+                \textcolor{keywordflow}{while} (work[l1][x1] != 0)\{
+                    l1 = l1 - 1;
+                \}
+                \textcolor{keywordflow}{while} (work[m1][x1] != 0)\{
+                    m1 = m1 + 1;
+                \}
+                y1 = (l1 + m1) / 2;
+            \}
+            
+            \textcolor{keywordtype}{unsigned} l2 = 0;
+            \textcolor{keywordtype}{unsigned} m2 = 0;
+            \textcolor{keywordflow}{if} ( work[y2][x2] % 2 == 1 )\{
+                l2 = x2;
+                m2 = x2;
+                \textcolor{keywordflow}{while} (work[y2][l2] != 0)
+                    l2 = l2 - 1;
+                \textcolor{keywordflow}{while} (work[y2][m2] != 0)
+                    m2 = m2 + 1;
+                x2 = (l2 + m2) / 2;
+            \}
+            \textcolor{keywordflow}{else} \textcolor{keywordflow}{if} ( work[y2][x2] % 2 == 0 )\{
+                l2 = y2;
+                m2 = y2;
+                \textcolor{keywordflow}{while} (work[l2][x2] != 0)
+                    l2 = l2 - 1;
+                \textcolor{keywordflow}{while} (work[m2][x2] != 0)
+                    m2 = m2 + 1;
+                y2 = (l2 + m2) / 2;
+            \}
+            
+            \textcolor{comment}{//строим соединительные линии  }
+
+            \textcolor{keywordflow}{if} ((y1 + 5 > y2 - 5) && (y1 - 5 < y2 + 5))\{
+                \textcolor{keywordflow}{if} (x1 > x2)\{
+                    swap(x1,x2);
+                    swap(y1,y2);
+                \}
+                \textcolor{keywordflow}{for} (\textcolor{keywordtype}{unsigned} l = y1 - 2; l < y1 + 3; l++)
+                    \textcolor{keywordflow}{for} (\textcolor{keywordtype}{unsigned} m = x1 + 1; m < x1 + 10; m++)
+                        work[l][m] = 254;
+                \textcolor{keywordflow}{if} (y2 > y1)\{
+                    \textcolor{keywordflow}{for} (\textcolor{keywordtype}{unsigned} l = y1 - 2; l < y2 + 3; l++)
+                        \textcolor{keywordflow}{for} (\textcolor{keywordtype}{unsigned} m = x1 + 10; m < x1 + 15; m++)
+                            work[l][m] = 254;
+                    \textcolor{keywordflow}{for} (\textcolor{keywordtype}{unsigned} l = y2 - 2; l < y2 + 3; l++)
+                        \textcolor{keywordflow}{for} (\textcolor{keywordtype}{unsigned} m = x1 + 15; m < x2; m++)
+                            work[l][m] = 254;
+                \}
+                \textcolor{keywordflow}{else}\{
+                    \textcolor{keywordflow}{for} (\textcolor{keywordtype}{unsigned} l = y2 - 2; l < y1 + 3; l++)
+                        \textcolor{keywordflow}{for} (\textcolor{keywordtype}{unsigned} m = x1 + 10; m < x1 + 15; m++)
+                            work[l][m] = 254;
+                    \textcolor{keywordflow}{for} (\textcolor{keywordtype}{unsigned} l = y2 - 2; l < y2 + 3; l++)
+                        \textcolor{keywordflow}{for} (\textcolor{keywordtype}{unsigned} m = x1 + 15; m < x2; m++)
+                            work[l][m] = 254;
+                \}
+            \}
+            \textcolor{keywordflow}{else} \textcolor{comment}{//if (x1 == x2)\{}
+                \textcolor{keywordflow}{if} ((x1 + 5 > x2 - 5) && (x1 - 5 < x2 + 5))\{
+                \textcolor{keywordflow}{if} (y1 > y2)\{
+                    swap(x1,x2);
+                    swap(y1,y2);
+                \}
+                \textcolor{keywordflow}{for} (\textcolor{keywordtype}{unsigned} l = x1 - 2; l < x1 + 3; l++)
+                    \textcolor{keywordflow}{for} (\textcolor{keywordtype}{unsigned} m = y1 + 1; m < y2; m++)
+                        work[m][l] = 254;
+            \}    
+            \textcolor{keywordflow}{else} \{   \textcolor{comment}{//углы}
+                \textcolor{keywordflow}{if} (x1 > x2)\{
+                    swap(x1,x2);
+                    swap(y1,y2);
+                \}
+                \textcolor{keywordflow}{if} ((work[y1 - 1][x1] == 0) && (work[y2][x2 - 1] == 0))\{
+                    \textcolor{keywordflow}{for} (\textcolor{keywordtype}{unsigned} l = y2 - 2; l < y1; l++)
+                        \textcolor{keywordflow}{for} (\textcolor{keywordtype}{unsigned} m = x1 - 2; m < x1 + 3;m++)
+                            work[l][m] = 254;
+                    \textcolor{keywordflow}{for} (\textcolor{keywordtype}{unsigned} l = y2 - 2; l < y2 + 3; l++)
+                        \textcolor{keywordflow}{for} (\textcolor{keywordtype}{unsigned} m = x1 + 3; m < x2; m++)
+                            work[l][m] = 254;
+                \}
+                \textcolor{keywordflow}{if} ((work[y1][x1 + 1] == 0) && (work[y2 - 1][x2] == 0))\{
+                    \textcolor{keywordflow}{for} (\textcolor{keywordtype}{unsigned} l = y1 - 2; l < y2; l++)
+                        \textcolor{keywordflow}{for} (\textcolor{keywordtype}{unsigned} m = x2 - 2; m < x2 + 3;m++)
+                            work[l][m] = 254;
+                    \textcolor{keywordflow}{for} (\textcolor{keywordtype}{unsigned} l = y1 - 2; l < y1 + 3; l++)
+                        \textcolor{keywordflow}{for} (\textcolor{keywordtype}{unsigned} m = x1 + 1; m < x2 - 2; m++)
+                            work[l][m] = 254;
+                \}
+                \textcolor{keywordflow}{if} ((work[y1][x1 + 1] == 0) && (work[y2 + 1][x2] == 0))\{
+                    \textcolor{keywordflow}{for} (\textcolor{keywordtype}{unsigned} l = y2 + 1; l < y1 + 3; l++)
+                        \textcolor{keywordflow}{for} (\textcolor{keywordtype}{unsigned} m = x2 - 2; m < x2 + 3;m++)
+                            work[l][m] = 254;
+                    \textcolor{keywordflow}{for} (\textcolor{keywordtype}{unsigned} l = y1 - 2; l < y1 + 3; l++)
+                        \textcolor{keywordflow}{for} (\textcolor{keywordtype}{unsigned} m = x1 + 1; m < x2 - 2; m++)
+                            work[l][m] = 254;
+                \}
+                \textcolor{keywordflow}{if} ((work[y1 + 1][x1] == 0) && (work[y2][x2 - 1] == 0))\{
+                    \textcolor{keywordflow}{for} (\textcolor{keywordtype}{unsigned} l = y1 + 1; l < y2 + 3; l++)
+                        \textcolor{keywordflow}{for} (\textcolor{keywordtype}{unsigned} m = x1 - 2; m < x1 + 3;m++)
+                            work[l][m] = 254;
+                    \textcolor{keywordflow}{for} (\textcolor{keywordtype}{unsigned} l = y2 - 2; l < y2 + 3; l++)
+                        \textcolor{keywordflow}{for} (\textcolor{keywordtype}{unsigned} m = x1 + 3; m < x2; m++)
+                            work[l][m] = 254;
+                \}
+            \}
+        
+        \}   
+\end{DoxyCode}
+\mbox{\Hypertarget{header_8cpp_a019c326f9a54da478f0e30d9aac86ab2}\label{header_8cpp_a019c326f9a54da478f0e30d9aac86ab2}} 
+\index{header.\+cpp@{header.\+cpp}!push\+\_\+elements@{push\+\_\+elements}}
+\index{push\+\_\+elements@{push\+\_\+elements}!header.\+cpp@{header.\+cpp}}
+\subsubsection{\texorpdfstring{push\+\_\+elements()}{push\_elements()}}
+{\footnotesize\ttfamily void push\+\_\+elements (\begin{DoxyParamCaption}\item[{int $\ast$$\ast$\&}]{work,  }\item[{unsigned}]{x1,  }\item[{unsigned}]{y1,  }\item[{unsigned}]{x2,  }\item[{unsigned}]{y2 }\end{DoxyParamCaption})}
+
+Подставляет на место найденных элементов цепи их идеальные изображения 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in,out}  & {\em work} & рабочая область изображения \\
+\hline
+\mbox{\tt in}  & {\em x1} & одна из координат интересующей области \\
+\hline
+\mbox{\tt in}  & {\em y1} & одна из координат интересующей области \\
+\hline
+\mbox{\tt in}  & {\em x2} & одна из координат интересующей области \\
+\hline
+\mbox{\tt in}  & {\em y2} & одна из координат интересующей области \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyCode}
+Mat el;
+std::cout << \textcolor{stringliteral}{"elements"} << std:: endl;
+\textcolor{keywordflow}{for} (\textcolor{keywordtype}{unsigned} i = 0; i < y2- y1 + 61; i++)
+    \textcolor{keywordflow}{for}(\textcolor{keywordtype}{unsigned} j = 0; j < x2 - x1 + 61; j++)\{
+        \textcolor{keywordflow}{if} ((work[i][j] > 0) && (work[i][j] < 19))\{
+            \textcolor{comment}{//std::cout << work[i][j] << " " << i << " " << j << std ::endl;}
+            std::string element = \textcolor{stringliteral}{"elements/"} + std::to\_string(work[i][j]) + \textcolor{stringliteral}{".jpg"};
+            el = cv::imread(element);
+            \hyperlink{header_8cpp_a093a60e169f0689082603a2d82fc2d63}{delete\_noize}(el,50);
+           
+           
+            \textcolor{keywordtype}{unsigned} y5 = i;
+            \textcolor{keywordtype}{unsigned} x5 = j;
+            \textcolor{keywordflow}{while} (work[y5 + 1][j] != 0)
+                y5++;
+            \textcolor{keywordflow}{while} (work[i][x5 + 1] != 0)
+                x5++;
+            \textcolor{keywordtype}{unsigned} dir = work[y5][x5] % 2;
+            \textcolor{keywordflow}{for} (\textcolor{keywordtype}{unsigned} i1 = i; i1 <= y5;i1++)
+                \textcolor{keywordflow}{for} (\textcolor{keywordtype}{unsigned} j1 = j; j1 <= x5; j1++)
+                    work[i1][j1] = 0;
+            y5 = (i + y5) / 2;
+            x5 = (j + x5) / 2;
+            \textcolor{keywordflow}{for} (\textcolor{keywordtype}{unsigned} i1 = y5 - el.rows / 2; i1 < y5 + el.rows / 2 - 5; i1++)
+                \textcolor{keywordflow}{for} (\textcolor{keywordtype}{unsigned} j1 = x5 - el.cols / 2; j1 < x5 + el.cols / 2 - 5; j1++)
+                    work[i1][j1] = el.at<cv::Vec3b>(i1 - y5 + el.rows / 2,j1 - x5 + el.cols / 2)[0];
+            
+            \textcolor{keywordtype}{unsigned} x6 = x5;
+            \textcolor{keywordtype}{unsigned} y6 = y5;
+            \textcolor{keywordtype}{unsigned} x7 = x5;
+            \textcolor{keywordtype}{unsigned} y7 = y5;
+            \textcolor{keywordflow}{if} (dir == 1)\{ \textcolor{comment}{//вертикальные провода}
+                \textcolor{keywordflow}{while} (work[y6][x6] == 0)
+                    y6++;
+                y6 += 7;
+                \textcolor{keywordflow}{while} (work[y7][x7] == 0)
+                    y7--;
+                y7 -= 7;
+                \textcolor{keywordtype}{unsigned} x8 = x6;
+                \textcolor{keywordtype}{unsigned} x9 = x7;
+                \textcolor{keywordtype}{unsigned} y8 = y6;
+                \textcolor{keywordtype}{unsigned} y9 = y7;
+                y6 -= 4;
+                y7 += 4;
+                \textcolor{keywordflow}{while} (work[y8][x8] == 0)
+                    y8++;
+                \textcolor{keywordflow}{while} (work[y9][x9] == 0)
+                    y9--;
+                \textcolor{keywordflow}{for} (\textcolor{keywordtype}{unsigned} i1 = y6; i1 < y8; i1++)
+                    \textcolor{keywordflow}{for} (\textcolor{keywordtype}{unsigned} j1 = x6 - 2; j1 < x6 + 3; j1++)
+                        work[i1][j1] = 255;
+                \textcolor{keywordflow}{for} (\textcolor{keywordtype}{unsigned} i1 = y9; i1 < y7; i1++)
+                    \textcolor{keywordflow}{for} (\textcolor{keywordtype}{unsigned} j1 = x7 - 2; j1 < x7 + 3; j1++)
+                        work[i1][j1] = 255;
+
+            \}\textcolor{keywordflow}{else}\{
+                \textcolor{keywordflow}{while} (work[y6][x6] == 0)
+                    x6++;
+                x6 += 7;
+                \textcolor{keywordflow}{while} (work[y7][x7] == 0)
+                    x7--;
+                x7 -= 7;
+                \textcolor{keywordtype}{unsigned} x8 = x6;
+                \textcolor{keywordtype}{unsigned} x9 = x7;
+                \textcolor{keywordtype}{unsigned} y8 = y6;
+                \textcolor{keywordtype}{unsigned} y9 = y7;
+                x6 -= 4;
+                x7 += 4;
+                \textcolor{keywordflow}{while} (work[y8][x8] == 0)
+                    x8++;
+                \textcolor{keywordflow}{while} (work[y9][x9] == 0)
+                    x9--;
+                \textcolor{keywordflow}{for} (\textcolor{keywordtype}{unsigned} i1 = x6; i1 < x8; i1++)
+                    \textcolor{keywordflow}{for} (\textcolor{keywordtype}{unsigned} j1 = y6 - 2; j1 < y6 + 3; j1++)
+                        work[j1][i1] = 255;
+                \textcolor{keywordflow}{for} (\textcolor{keywordtype}{unsigned} i1 = x9; i1 < x7; i1++)
+                    \textcolor{keywordflow}{for} (\textcolor{keywordtype}{unsigned} j1 = y7 - 2; j1 < y7 + 3; j1++)
+                        work[j1][i1] = 255;
+            \}
+            
+        \}
+    \}
+\end{DoxyCode}
