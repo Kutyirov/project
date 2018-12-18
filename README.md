@@ -9,4 +9,4 @@
 + компилятор g++
 
 ## Контакты
-+ Андрей, [20andrusha12@gmail.com]
++ Андрей, 20andrusha12@gmail.com
